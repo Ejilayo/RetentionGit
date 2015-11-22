@@ -1,0 +1,275 @@
+    public static void radixSortA( String [ ] arr, int stringLen )
+    {
+        final int BUCKETS = 256;
+        
+        ArrayList<String> [ ] buckets = new ArrayList[ BUCKETS ];
+        
+        for( int i = 0; i < BUCKETS; i++ )
+            buckets[ i ] = new ArrayList<>( );
+        
+        for( int pos = stringLen - 1; pos >= 0; pos-- )
+        {
+            for( String s : arr )
+                buckets[ s.charAt( pos ) ].add( s );
+            
+            int idx = 0;
+            for( ArrayList<String> thisBucket : buckets )
+            {
+                for( String s : thisBucket )
+                    arr[ idx++ ] = s;
+                
+                thisBucket.clear( );
+            }
+        }
+    }
+       
+   /* 
+     * Counting radix sort an array of Strings
+     * Assume all are all ASCII
+     * Assume all have same length
+    */ 
+    public static void countingRadixSort( String [ ] arr, int stringLen )
+    {
+        final int BUCKETS = 256;
+        
+        int N = arr.length;
+        String [ ] buffer = new String[ N ];
+
+        String [ ] in = arr;
+        String [ ] out = buffer;
+        
+        for( int pos = stringLen - 1; pos >= 0; pos-- )
+        {
+            int[ ] count = new int [ BUCKETS + 1 ];
+            
+            for( int i = 0; i < N; i++ )
+                count[ in[ i ].charAt( pos ) + 1 ]++;
+
+            for( int b = 1; b <= BUCKETS; b++ )
+                count[ b ] += count[ b - 1 ];
+
+            for( int i = 0; i < N; i++ )
+                out[ count[ in[ i ].charAt( pos ) ]++ ] = in[ i ];
+            
+              // swap in and out roles
+            String [ ] tmp = in;
+            in = out;
+            out = tmp;
+            
+/*          
+ * TESTING PRINTWRITER 
+ *   		try{
+            	PrintWriter printToFile = new PrintWriter("result.txt");
+            	
+            	String result = "in:[ ";
+	            for(String innards : in){
+	            	result = result + innards + " ";
+	            }
+	            result = result + "]" +"\n";
+	            
+	            result = result + "out:[ ";
+	            for(String outards : in){
+	            	result = result + outards + " ";
+	            }
+	            result = result + "]" +"\n";
+	            
+	            //System.out.print(result);
+	            
+	            printToFile.println(result);
+	            
+	            printToFile.close();
+	        }catch(IOException e){e.printStackTrace();}
+	        
+	        */
+            
+        }
+           // if odd number of passes, in is buffer, out is arr; so copy back
+        if( stringLen % 2 == 1 )
+            for( int i = 0; i < arr.length; i++ )
+                out[ i ] = in[ i ];
+    }
+    
+    /*
+     * Radix sort an array of Strings
+     * Assume all are all ASCII
+     * Assume all have length bounded by maxLen
+     */
+    public static void radixSort( String [ ] arr, int maxLen )
+    {
+        final int BUCKETS = 256;
+        
+        ArrayList<String> [ ] wordsByLength = new ArrayList[ maxLen + 1 ];
+        ArrayList<String> [ ] buckets = new ArrayList[ BUCKETS ];
+        
+        for( int i = 0; i < wordsByLength.length; i++ )
+            wordsByLength[ i ] = new ArrayList<>( );
+        
+        for( int i = 0; i < BUCKETS; i++ )
+            buckets[ i ] = new ArrayList<>( );
+        
+        for( String s : arr )
+            wordsByLength[ s.length( ) ].add( s );
+       
+        int idx = 0;
+        for( ArrayList<String> wordList : wordsByLength )
+            for( String s : wordList )
+                arr[ idx++ ] = s;
+        
+        int startingIndex = arr.length;    
+        for( int pos = maxLen - 1; pos >= 0; pos-- )
+        {
+            startingIndex -= wordsByLength[ pos + 1 ].size( );
+            
+            for( int i = startingIndex; i < arr.length; i++ )
+                buckets[ arr[ i ].charAt( pos ) ].add( arr[ i ] );
+            
+            idx = startingIndex;
+            for( ArrayList<String> thisBucket : buckets )
+            {
+                for( String s : thisBucket )
+                    arr[ idx++ ] = s;
+                
+                thisBucket.clear( );
+            }
+        }
+    }
+    
+    public static void quickSortString(String [] arr, int first, int last){
+    	
+    	if (first < last){
+    		int part = partitionArray(arr,first,last);
+    		quickSortString(arr,first, part -1);
+    		quickSortString(arr,part+1, last);
+    	}
+    	
+    }
+    
+    private static int partitionArray(String [] arr, int first, int last){
+    	Random randGen = new Random();
+    	int part = randGen.nextInt(last-first) + first;
+    	
+    	swap(arr, part, last);
+    	String checkString = arr[last];
+    	int i = first - 1;
+    	
+    	for(int j = first; j< last; j++){
+    		if(arr[j].compareTo(checkString) < 0 ){
+    			i = i+1;
+    			swap(arr,i,j);
+    		}
+    	}
+    	
+    	swap(arr,(i+1), last);
+    	
+    	return i+1;
+    }
+    
+    private static void swap(String arr[], int one, int two){
+    	String first = arr[one];
+    	String second = arr[two];
+    	
+    	arr[two] = first;
+    	arr[one] = second;
+    }
+
+    public static void main( String [ ] args )
+    {
+        List<String> lst = new ArrayList<>( );
+        Random r = new Random( );
+
+        final int LEN = 5;
+        
+        for( int i = 0; i < 1000; i++ )
+        {
+            String str = "";
+            int len = LEN; // 3 + r.nextInt( 7 ); // between 3 and 9 characters
+
+            for( int j = 0; j < len; j++ )
+                str += (char) ( 'a' + r.nextInt( 26 ) );
+
+            lst.add( str );
+        }
+
+        String [ ] arr1 = new String[ lst.size( ) ];
+        String [ ] arr2 = new String[ lst.size( ) ];
+        String [ ] arr3 = new String[ lst.size( ) ];
+
+        lst.toArray( arr1 );
+        lst.toArray( arr2 );
+        lst.toArray( arr3 );
+        
+        long start, end;
+
+        start = System.currentTimeMillis( );
+        Arrays.sort( arr1 );
+        end = System.currentTimeMillis( );
+        System.out.println( "Elapsed(Array Default): " + ( end - start ) );
+
+
+        start = System.currentTimeMillis( );			
+        radixSort( arr2, LEN );
+        end = System.currentTimeMillis( );
+        System.out.println( "Elapsed(Counting Radix): " + ( end - start ) );
+
+        start = System.currentTimeMillis( );			
+        quickSortString( arr3, 0, lst.size()-1 );
+        end = System.currentTimeMillis( );
+        System.out.println( "Elapsed(QuickSort): " + ( end - start ) );
+
+        
+        for( int i = 0; i < arr1.length; i++ )
+            if( (!arr1[ i ].equals( arr2[ i ]  )) && (!arr2[ i ].equals( arr3[ i ]  )) )
+                System.out.println( "OOPS!!" );
+    }
+//
+//	
+//	public static void main(String [] args){
+//		String [] allMonths = {"January","February","March","April","May","June",
+//				"July","August","September","October","November","December"};
+//
+//		//Arrays.sort(allMonths);
+//		
+//		quickSortString(allMonths,0,11);
+//		
+//		for (String month: allMonths){
+//			System.out.print(month + " ");
+//		}
+//		
+		//System.out.print("\n\n");
+		
+		//Dated [] days = {new Dated(2024,9,2),new Dated(2014,10,4),new Dated(),new Dated(2050,2,2),new Dated(2016,9,2),new Dated(2049,3,3)};
+
+//		Arrays.sort(days);
+//		
+//		for (Dated dates: days){
+//			System.out.println(dates + " ");
+//		}
+
+//	}
+
+/*
+//Used,	
+//During the great date problem of sqlite
+		Database.connectDB();
+		
+		ResultSet rs = Database.queryTable("SELECT * FROM SYSRUN");
+		
+		try{
+			while (rs.next()){
+				int count = rs.getInt(1);
+				String date = rs.getString(2);
+				String newDate = new Dated(date).toSqlString();
+				System.out.println(newDate);
+				
+				Database.updateTable("SYSRUN","RUNDATE = " + Database.sSP(newDate) ,"ID = " + count);
+				
+			}
+		}
+		catch(SQLException e){
+			Database.errorToString(e);
+		}
+		finally{
+			Database.closeDB();
+		}
+		
+*/

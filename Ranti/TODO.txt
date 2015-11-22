@@ -1,0 +1,17 @@
+
+-Reset after adding a question;
+-Add average time to list test metrics
+-Change size of image scroll pane in TestTakingGUI
+-Add actionEvent to TestCriteriaGui to number of questions based on selections...might get hairy for no authors chosen- review code;
+-Take previous tests
+-Show previous results of same test
+-Take test using previous test start(may mean TestTaking(TestTaking) constructor)
+-Fill in the Gap
+-Remove and Edit Operations
+-Not ticking "Decoys only" even when you have added decoys it does not become 
+	part of the database...completely a GUI problem
+-Error Checking and Communication
+-Messaging
+
+-Android
+-HTML
